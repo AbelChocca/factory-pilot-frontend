@@ -49,6 +49,22 @@
 }
 
 :root {
+  --background: white;
+  --foreground: navy;
+
+  --primary: blue;
+  --primary-foreground: white;
+
+  --secondary: light-blue;
+  --secondary-foreground: navy;
+
+  --muted: light-gray;
+  --muted-foreground: slate;
+
+  --accent: light-blue;
+  --accent-foreground: navy;
+
+  --border: slate-200;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
