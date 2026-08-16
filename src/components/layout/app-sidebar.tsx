@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   Armchair,
-  Factory,
   LayoutDashboard,
   Package,
   ShoppingCart,
@@ -15,7 +14,7 @@ const navigation = [
     items: [
       {
         name: "Dashboard",
-        href: "/",
+        href: "/dashboard",
         icon: LayoutDashboard,
       },
     ],
@@ -25,18 +24,13 @@ const navigation = [
     items: [
       {
         name: "Products",
-        href: "/products",
+        href: "/dashboard/products",
         icon: Armchair,
       },
       {
         name: "Materials",
-        href: "/materials",
+        href: "/dashboard/materials",
         icon: Package,
-      },
-      {
-        name: "Production",
-        href: "/production",
-        icon: Factory,
       },
     ],
   },
@@ -45,12 +39,12 @@ const navigation = [
     items: [
       {
         name: "Suppliers",
-        href: "/suppliers",
+        href: "/dashboard/suppliers",
         icon: Truck,
       },
       {
         name: "Purchase Plans",
-        href: "/purchase-plans",
+        href: "/dashboard/purchase-plans",
         icon: ShoppingCart,
       },
     ],
@@ -75,6 +69,11 @@ export function AppSidebar() {
                   <Link
                     key={item.name}
                     href={item.href}
+                    data-cinematic={
+                      item.name === "Purchase Plans"
+                        ? "purchase-plans-navigation"
+                        : undefined
+                    }
                     className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   >
                     <Icon className="size-4" />

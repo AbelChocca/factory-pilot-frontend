@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import { AICopilot } from "../ai/ai-copilot";
 import { AppHeader } from "./app-header";
 import { AppSidebar } from "./app-sidebar";
@@ -11,8 +9,6 @@ interface AppShellProps {
 }
 
 export function AppShell({ children }: AppShellProps) {
-  const [isCopilotOpen, setIsCopilotOpen] = useState(true);
-
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <AppHeader />
@@ -22,7 +18,7 @@ export function AppShell({ children }: AppShellProps) {
 
         <main className="min-w-0 flex-1 overflow-y-auto">{children}</main>
 
-        <AICopilot isOpen={isCopilotOpen} onOpenChange={setIsCopilotOpen} />
+        <AICopilot />
       </div>
     </div>
   );
