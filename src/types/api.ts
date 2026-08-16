@@ -389,6 +389,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/dashboard/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Dashboard Overview */
+        get: operations["get_dashboard_overview_dashboard_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -464,11 +481,48 @@ export interface components {
             /** Lead Time Days */
             lead_time_days: number;
         };
+        /** DashboardOverviewResponse */
+        DashboardOverviewResponse: {
+            operational_health: components["schemas"]["OperationalHealth"];
+            production_readiness: components["schemas"]["ProductionReadiness"];
+            inventory_health: components["schemas"]["InventoryHealth"];
+            procurement: components["schemas"]["ProcurementSummary"];
+            production_risks: components["schemas"]["ProductionRiskSummary"];
+            material_coverage: components["schemas"]["MaterialCoverageSummary"];
+            supplier_risk: components["schemas"]["SupplierRiskSummary"];
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** InventoryHealth */
+        InventoryHealth: {
+            materials: components["schemas"]["InventoryHealthSection"];
+            products: components["schemas"]["InventoryHealthSection"];
+            /** Overall Percentage */
+            overall_percentage: number;
+            overall_status: components["schemas"]["InventoryHealthStatus"];
+        };
+        /** InventoryHealthSection */
+        InventoryHealthSection: {
+            /** Total Items */
+            total_items: number;
+            /** Available Items */
+            available_items: number;
+            /** Low Stock Items */
+            low_stock_items: number;
+            /** Out Of Stock Items */
+            out_of_stock_items: number;
+            /** Health Percentage */
+            health_percentage: number;
+            status: components["schemas"]["InventoryHealthStatus"];
+        };
+        /**
+         * InventoryHealthStatus
+         * @enum {string}
+         */
+        InventoryHealthStatus: "healthy" | "attention" | "critical";
         /** InventoryMovementResponseSchema */
         InventoryMovementResponseSchema: {
             /**
@@ -511,6 +565,45 @@ export interface components {
          * @enum {string}
          */
         InventoryOwnerType: "PRODUCT" | "MATERIAL";
+        /** MaterialCoverageRisk */
+        MaterialCoverageRisk: {
+            /**
+             * Material Id
+             * Format: uuid
+             */
+            material_id: string;
+            /** Material Name */
+            material_name: string;
+            /** Material Sku */
+            material_sku: string;
+            /** Current Stock */
+            current_stock: string;
+            /** Average Daily Consumption */
+            average_daily_consumption: string;
+            /** Days Of Stock */
+            days_of_stock: string | null;
+            status: components["schemas"]["MaterialCoverageStatus"];
+        };
+        /**
+         * MaterialCoverageStatus
+         * @enum {string}
+         */
+        MaterialCoverageStatus: "critical" | "low" | "healthy" | "no_consumption";
+        /** MaterialCoverageSummary */
+        MaterialCoverageSummary: {
+            /** Materials Tracked */
+            materials_tracked: number;
+            /** Critical Materials */
+            critical_materials: number;
+            /** Low Coverage Materials */
+            low_coverage_materials: number;
+            /** Average Days Of Stock */
+            average_days_of_stock: string | null;
+            /** Minimum Days Of Stock */
+            minimum_days_of_stock: string | null;
+            /** Top Risks */
+            top_risks: components["schemas"]["MaterialCoverageRisk"][];
+        };
         /** MaterialImpactContext */
         MaterialImpactContext: {
             /**
@@ -607,6 +700,29 @@ export interface components {
          * @enum {string}
          */
         MaterialType: "RAW_MATERIAL" | "ACCESSORY" | "PACKAGING" | "CONSUMABLE";
+        /** OperationalHealth */
+        OperationalHealth: {
+            /** Score */
+            score: number;
+            status: components["schemas"]["OperationalStatus"];
+            /** Issues Requiring Attention */
+            issues_requiring_attention: number;
+            /** Low Stock Materials */
+            low_stock_materials: number;
+            /** Out Of Stock Materials */
+            out_of_stock_materials: number;
+            /** High Risk Products */
+            high_risk_products: number;
+            /** Medium Risk Products */
+            medium_risk_products: number;
+            /** Pending Purchase Plans */
+            pending_purchase_plans: number;
+        };
+        /**
+         * OperationalStatus
+         * @enum {string}
+         */
+        OperationalStatus: "healthy" | "attention" | "critical";
         /** PaginatedResponseSchema[InventoryMovementResponseSchema] */
         PaginatedResponseSchema_InventoryMovementResponseSchema_: {
             /** Items */
@@ -662,6 +778,58 @@ export interface components {
             /** Current Page */
             current_page: number;
         };
+        /** ProcurementAction */
+        ProcurementAction: {
+            /**
+             * Purchase Plan Id
+             * Format: uuid
+             */
+            purchase_plan_id: string;
+            /**
+             * Material Id
+             * Format: uuid
+             */
+            material_id: string;
+            /** Material Name */
+            material_name: string;
+            /**
+             * Supplier Id
+             * Format: uuid
+             */
+            supplier_id: string;
+            /** Supplier Name */
+            supplier_name: string;
+            /** Quantity */
+            quantity: string;
+            /** Estimated Cost */
+            estimated_cost: string;
+            /** Lead Time Days */
+            lead_time_days: number;
+            status: components["schemas"]["PurchasePlanStatus"];
+            priority: components["schemas"]["ProcurementPriority"];
+        };
+        /**
+         * ProcurementPriority
+         * @enum {string}
+         */
+        ProcurementPriority: "critical" | "high" | "normal";
+        /** ProcurementSummary */
+        ProcurementSummary: {
+            /** Draft Purchase Plans */
+            draft_purchase_plans: number;
+            /** Approved Purchase Plans */
+            approved_purchase_plans: number;
+            /** Pending Purchase Plans */
+            pending_purchase_plans: number;
+            /** Materials To Replenish */
+            materials_to_replenish: number;
+            /** Estimated Pending Cost */
+            estimated_pending_cost: string;
+            /** Critical Materials */
+            critical_materials: number;
+            /** Top Actions */
+            top_actions: components["schemas"]["ProcurementAction"][];
+        };
         /** ProductMaterialResponse */
         ProductMaterialResponse: {
             /**
@@ -698,6 +866,21 @@ export interface components {
             status: components["schemas"]["Status"];
             availability_status: components["schemas"]["AvailabilityStatus"];
         };
+        /** ProductionReadiness */
+        ProductionReadiness: {
+            /** Total Products */
+            total_products: number;
+            /** Low Risk Products */
+            low_risk_products: number;
+            /** Medium Risk Products */
+            medium_risk_products: number;
+            /** High Risk Products */
+            high_risk_products: number;
+            /** Critical Risk Products */
+            critical_risk_products: number;
+            /** Readiness Percentage */
+            readiness_percentage: number;
+        };
         /** ProductionRiskAnalysisSchema */
         ProductionRiskAnalysisSchema: {
             /** Analysis Period Days */
@@ -712,6 +895,8 @@ export interface components {
             low_risk_products: number;
             /** Products */
             products: components["schemas"]["ProductionRiskProductSchema"][];
+            /** Critical Risk Products */
+            critical_risk_products?: number | null;
         };
         /** ProductionRiskFactorSchema */
         ProductionRiskFactorSchema: {
@@ -764,6 +949,23 @@ export interface components {
             /** Suppliers */
             suppliers: components["schemas"]["ProductionRiskSupplierSchema"][];
         };
+        /** ProductionRiskOverviewItem */
+        ProductionRiskOverviewItem: {
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /** Product Name */
+            product_name: string;
+            /** Product Sku */
+            product_sku: string;
+            /** Current Producible Units */
+            current_producible_units: string;
+            risk_level: components["schemas"]["ProductionRiskLevel"];
+            /** Bottleneck Material Name */
+            bottleneck_material_name: string | null;
+        };
         /** ProductionRiskProductSchema */
         ProductionRiskProductSchema: {
             /**
@@ -783,6 +985,21 @@ export interface components {
             bottleneck_material: components["schemas"]["ProductionRiskMaterialSchema"] | null;
             /** Risk Materials */
             risk_materials: components["schemas"]["ProductionRiskMaterialSchema"][];
+        };
+        /** ProductionRiskSummary */
+        ProductionRiskSummary: {
+            /** Products Analyzed */
+            products_analyzed: number;
+            /** Low Risk Products */
+            low_risk_products: number;
+            /** Medium Risk Products */
+            medium_risk_products: number;
+            /** High Risk Products */
+            high_risk_products: number;
+            /** Critical Risk Products */
+            critical_risk_products: number;
+            /** Top Risks */
+            top_risks: components["schemas"]["ProductionRiskOverviewItem"][];
         };
         /** ProductionRiskSupplierSchema */
         ProductionRiskSupplierSchema: {
@@ -912,6 +1129,11 @@ export interface components {
             quantity: number | string;
         };
         /**
+         * RiskLevel
+         * @enum {string}
+         */
+        RiskLevel: "low" | "medium" | "high" | "critical";
+        /**
          * Status
          * @enum {string}
          */
@@ -952,6 +1174,42 @@ export interface components {
             /** Lead Time Days */
             lead_time_days: number;
             status: components["schemas"]["Status"];
+        };
+        /** SupplierRiskOverviewItem */
+        SupplierRiskOverviewItem: {
+            /**
+             * Supplier Id
+             * Format: uuid
+             */
+            supplier_id: string;
+            /** Supplier Name */
+            supplier_name: string;
+            /** Lead Time Days */
+            lead_time_days: number;
+            /** Affected Materials */
+            affected_materials: number;
+            /** Critical Materials */
+            critical_materials: number;
+            /** High Risk Materials */
+            high_risk_materials: number;
+            risk_level: components["schemas"]["RiskLevel"];
+        };
+        /** SupplierRiskSummary */
+        SupplierRiskSummary: {
+            /** Total Suppliers */
+            total_suppliers: number;
+            /** Suppliers At Risk */
+            suppliers_at_risk: number;
+            /** Critical Risks */
+            critical_risks: number;
+            /** High Risks */
+            high_risks: number;
+            /** Medium Risks */
+            medium_risks: number;
+            /** Low Risks */
+            low_risks: number;
+            /** Top Risks */
+            top_risks: components["schemas"]["SupplierRiskOverviewItem"][];
         };
         /**
          * UnitType
@@ -2033,6 +2291,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_dashboard_overview_dashboard_overview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardOverviewResponse"];
                 };
             };
         };

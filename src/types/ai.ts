@@ -1,4 +1,5 @@
 import { UnitType } from "./aliases";
+import { InventoryOwnerType } from "./inventry-types";
 
 export type MaterialImpactLevel = "LOW" | "MEDIUM" | "HIGH";
 
@@ -13,6 +14,57 @@ export type ProductionRiskFactorType =
   | "NO_SUPPLIER";
 
 export type ConsumptionTrend = "DECREASING" | "STABLE" | "INCREASING";
+
+export enum InventoryTrend {
+  INCREASING = "increasing",
+  DECREASING = "decreasing",
+  STABLE = "stable",
+}
+
+export interface InventoryTrendPoint {
+  date: string;
+  quantity: number;
+}
+
+export interface InventoryTrendItem {
+  owner_id: string;
+  owner_type: InventoryOwnerType;
+
+  owner_name: string;
+  owner_code: string;
+  unit_type: UnitType;
+
+  current_quantity: number;
+  minimum_quantity: number;
+
+  average_daily_outflow: number;
+  average_daily_inflow: number;
+
+  coverage_days: number | null;
+
+  trend: InventoryTrend;
+
+  total_inflow: number;
+  total_outflow: number;
+
+  history: InventoryTrendPoint[];
+}
+
+export interface InventoryTrendAnalysisEvent {
+  type: "inventory_trends";
+
+  period_days: number;
+
+  analyzed_from: string;
+  analyzed_to: string;
+
+  items: InventoryTrendItem[];
+
+  total_items: number;
+  decreasing_items: number;
+  increasing_items: number;
+  stable_items: number;
+}
 
 export interface ProductionRiskLLMFactor {
   factor: ProductionRiskFactorType;
@@ -176,11 +228,19 @@ export interface AIMessageDelta {
 
 export interface AIMessageEnd {
   type: "message_end";
+  status: AIAgentStatus;
+}
+
+export interface AIToolStart {
+  type: "tool_start";
+  tool_name: string;
+  call_id: string;
 }
 
 export interface AIToolEvent {
   type: "tool_event";
   event: AIEvent;
+  call_id: string;
 }
 
 export interface AIStreamError {
@@ -196,12 +256,14 @@ export type AIEvent =
   | PurchasePlanApprovedEvent
   | ProductionRiskAnalysisEvent
   | MaterialImpactAnalysisEvent
+  | InventoryTrendAnalysisEvent
   | ErrorEvent;
 
 export type AIStreamEvent =
   | AIMessageStart
   | AIMessageDelta
   | AIMessageEnd
+  | AIToolStart
   | AIToolEvent
   | AIStreamError;
 
@@ -215,7 +277,21 @@ export interface AIAssistantMessage {
   id: string;
   role: "assistant";
   content: string;
-  events: AIEvent[];
+  toolExecutions: AIToolExecution[];
+  agentStatus?: AIAgentStatus;
 }
 
 export type AIChatMessage = AIUserMessage | AIAssistantMessage;
+
+export interface AIToolExecution {
+  callId: string;
+  toolName: string;
+  event?: AIEvent;
+}
+
+export enum AIAgentStatus {
+  THINKING = "thinking",
+  ANALYZING = "analyzing",
+  COMPLETED = "completed",
+  ERROR = "error",
+}

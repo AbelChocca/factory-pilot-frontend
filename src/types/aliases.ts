@@ -45,3 +45,48 @@ export type PaginatedSuppliers =
 
 export type PaginatedInventoryMovements =
   components["schemas"]["PaginatedResponseSchema_InventoryMovementResponseSchema_"];
+
+export type SupplierRiskOverviewItem =
+  components["schemas"]["SupplierRiskOverviewItem"];
+
+export type SupplierRiskSummary = components["schemas"]["SupplierRiskSummary"];
+
+export type RiskLevel = components["schemas"]["RiskLevel"];
+
+export type ProductionRiskSummary =
+  components["schemas"]["ProductionRiskSummary"];
+
+export type ProductionRiskOverviewItem =
+  components["schemas"]["ProductionRiskOverviewItem"];
+
+export type ProductionReadiness = components["schemas"]["ProductionReadiness"];
+
+export type ProcurementAction = components["schemas"]["ProcurementAction"];
+
+export type ProcurementPriority = components["schemas"]["ProcurementPriority"];
+
+export type ProcurementSummary = components["schemas"]["ProcurementSummary"];
+
+export type OperationalHealth = components["schemas"]["OperationalHealth"];
+
+export type OperationalStatus = components["schemas"]["OperationalStatus"];
+
+export type MaterialCoverageRisk =
+  components["schemas"]["MaterialCoverageRisk"];
+
+export type MaterialCoverageStatus =
+  components["schemas"]["MaterialCoverageStatus"];
+
+export type MaterialCoverageSummary =
+  components["schemas"]["MaterialCoverageSummary"];
+
+export type InventoryHealth = components["schemas"]["InventoryHealth"];
+
+export type InventoryHealthSection =
+  components["schemas"]["InventoryHealthSection"];
+
+export type InventoryHealthStatus =
+  components["schemas"]["InventoryHealthStatus"];
+
+export type DashboardOverviewResponse =
+  components["schemas"]["DashboardOverviewResponse"];
