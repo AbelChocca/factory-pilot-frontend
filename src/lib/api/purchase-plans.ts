@@ -23,6 +23,7 @@ export interface UpdatePurchasePlanRequest {
 export interface GetPurchasePlansParams {
   page?: number;
   limit?: number;
+  search?: string;
 }
 
 export const purchasePlansApi = {
