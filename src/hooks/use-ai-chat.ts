@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 
-import type {
+import {
   AIAssistantMessage,
   AIStreamEvent,
   AIUserMessage,
@@ -10,6 +10,7 @@ import type {
 
 import { streamAIChat } from "@/src/lib/api/ai";
 import { useAIConversationStore } from "@/src/stores/ai-conversation-store";
+import { useCinematicStore } from "../stores/cinematic-store";
 
 export function useAIChat() {
   const [isStreaming, setIsStreaming] = useState(false);
@@ -23,6 +24,24 @@ export function useAIChat() {
     (state) => state.conversationId,
   );
 
+  const setPurchasePlanId = useCinematicStore(
+    (state) => state.setPurchasePlanId,
+  );
+
+  const cinematicStep = useCinematicStore((state) => state.stepIndex);
+
+  const setAnalysisStatus = useCinematicStore(
+    (state) => state.setAnalysisStatus,
+  );
+
+  const updateAssistantAgentStatus = useAIConversationStore(
+    (state) => state.updateAssistantAgentStatus,
+  );
+
+  const removeTransientToolExecutions = useAIConversationStore(
+    (state) => state.removeTransientToolExecutions,
+  );
+
   const addMessage = useAIConversationStore((state) => state.addMessage);
 
   const startConversation = useAIConversationStore(
@@ -31,6 +50,10 @@ export function useAIChat() {
 
   const appendAssistantContent = useAIConversationStore(
     (state) => state.appendAssistantContent,
+  );
+
+  const addAssistantToolStart = useAIConversationStore(
+    (state) => state.addAssistantToolStart,
   );
 
   const addAssistantEvent = useAIConversationStore(
@@ -52,8 +75,28 @@ export function useAIChat() {
           appendAssistantContent(assistantMessageId, event.delta);
           break;
 
+        case "tool_start":
+          addAssistantToolStart(
+            assistantMessageId,
+            event.tool_name,
+            event.call_id,
+          );
+
+          if (cinematicStep === 5) {
+            setAnalysisStatus("tool");
+          }
+          break;
+
         case "tool_event":
-          addAssistantEvent(assistantMessageId, event.event);
+          addAssistantEvent(assistantMessageId, event.call_id, event.event);
+
+          if (event.event.type === "purchase_plan_approved") {
+            setPurchasePlanId(event.event.purchase_plan_id);
+          }
+
+          if (cinematicStep === 5) {
+            setAnalysisStatus("event");
+          }
           break;
 
         case "error":
@@ -61,15 +104,27 @@ export function useAIChat() {
           break;
 
         case "message_end":
+          updateAssistantAgentStatus(assistantMessageId, event.status);
+          removeTransientToolExecutions(assistantMessageId);
           updateLastActivity();
+
+          if (cinematicStep === 5) {
+            setAnalysisStatus("completed");
+          }
           break;
       }
     },
     [
       startConversation,
       appendAssistantContent,
+      addAssistantToolStart,
       addAssistantEvent,
+      updateAssistantAgentStatus,
+      removeTransientToolExecutions,
       updateLastActivity,
+      setAnalysisStatus,
+      setPurchasePlanId,
+      cinematicStep,
     ],
   );
 
@@ -95,7 +150,7 @@ export function useAIChat() {
         id: assistantMessageId,
         role: "assistant",
         content: "",
-        events: [],
+        toolExecutions: [],
       };
 
       addMessage(userMessage);
@@ -104,7 +159,12 @@ export function useAIChat() {
       const controller = new AbortController();
 
       abortControllerRef.current = controller;
+
       setIsStreaming(true);
+
+      if (cinematicStep === 5) {
+        setAnalysisStatus("analyzing");
+      }
 
       try {
         await streamAIChat(
@@ -119,6 +179,10 @@ export function useAIChat() {
         );
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
+          if (cinematicStep === 5) {
+            setAnalysisStatus("idle");
+          }
+
           return;
         }
 
@@ -127,12 +191,24 @@ export function useAIChat() {
             ? error.message
             : "Something went wrong with FactoryPilot.",
         );
+
+        if (cinematicStep === 5) {
+          setAnalysisStatus("idle");
+        }
       } finally {
         setIsStreaming(false);
+
         abortControllerRef.current = null;
       }
     },
-    [conversationId, isStreaming, addMessage, handleStreamEvent],
+    [
+      conversationId,
+      isStreaming,
+      cinematicStep,
+      addMessage,
+      handleStreamEvent,
+      setAnalysisStatus,
+    ],
   );
 
   const stop = useCallback(() => {
