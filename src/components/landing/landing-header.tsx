@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -57,14 +56,10 @@ export function LandingHeader() {
           className="shrink-0"
           onClick={() => setMobileOpen(false)}
         >
-          <Image
-            src="/assets/factory_pilot_logo.png"
-            alt="FactoryPilot"
-            width={150}
-            height={40}
-            priority
-            className="h-9 w-auto object-contain"
-          />
+          <div className="text-2xl font-bold tracking-tight">
+            <span className="text-white">Factory</span>
+            <span className="text-[#5FA8FF]">Pilot</span>
+          </div>
         </Link>
 
         {/* Desktop navigation */}
