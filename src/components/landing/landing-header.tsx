@@ -4,22 +4,20 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-
 const navigation = [
+  {
+    label: "Problem",
+    href: "#problem",
+  },
   {
     label: "Platform",
     href: "#solution",
-  },
-  {
-    label: "How it works",
-    href: "#how-it-works",
   },
   {
     label: "AI Copilot",
     href: "#ai-copilot",
   },
 ];
-
 export function LandingHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);

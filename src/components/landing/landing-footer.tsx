@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 const navigation = [
@@ -23,14 +22,11 @@ export function LandingFooter() {
         <div className="flex flex-col gap-10 border-b border-white/10 pb-10 md:flex-row md:items-start md:justify-between">
           {/* Brand */}
           <div className="max-w-sm">
-            <Link href="/" className="inline-flex">
-              <Image
-                src="/assets/factory_pilot_logo.png"
-                alt="FactoryPilot"
-                width={150}
-                height={40}
-                className="h-9 w-auto object-contain"
-              />
+            <Link href="/" className="shrink-0">
+              <div className="text-2xl font-bold tracking-tight">
+                <span className="text-white">Factory</span>
+                <span className="text-[#5FA8FF]">Pilot</span>
+              </div>
             </Link>
 
             <p className="mt-5 text-sm leading-6 text-[#8FA5BF]">

@@ -20,8 +20,8 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:64px_64px]" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 pb-24 pt-24 lg:px-8 lg:pb-32 lg:pt-32">
-        <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="mx-auto flex min-h-screen max-w-7xl items-center px-6 py-24 lg:px-8 lg:py-32">
+        <div className="grid w-full items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
           {/* Copy */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -56,7 +56,7 @@ export function HeroSection() {
               </Link>
 
               <a
-                href="#how-it-works"
+                href="#solution"
                 className="inline-flex h-12 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-6 text-sm font-semibold text-white transition-colors hover:bg-white/10"
               >
                 See how it works
