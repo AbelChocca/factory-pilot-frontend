@@ -2,6 +2,7 @@
 
 import { useCallback, useLayoutEffect, useState } from "react";
 import { motion } from "motion/react";
+import { CinematicInteractionBlocker } from "./cinematic-interaction-blocker";
 
 type CinematicTargetStepProps = {
   targetSelector: string;
@@ -18,6 +19,7 @@ type CinematicTargetStepProps = {
   placement?: "top" | "bottom" | "left" | "right";
 
   tooltipGap?: number;
+  preventScroll?: boolean;
 };
 
 type TargetRect = {
@@ -41,6 +43,7 @@ export function CinematicTargetStep({
   onTargetClick,
   placement = "bottom",
   tooltipGap = 16,
+  preventScroll = false,
 }: CinematicTargetStepProps) {
   const [rect, setRect] = useState<TargetRect | null>(null);
 
@@ -149,6 +152,13 @@ export function CinematicTargetStep({
 
   return (
     <>
+      <CinematicInteractionBlocker
+        rect={rect}
+        enabled
+        allowTargetInteraction
+        preventScroll={preventScroll}
+        padding={10}
+      />
       <motion.div
         initial={{
           opacity: 0,

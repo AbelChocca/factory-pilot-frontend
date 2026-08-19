@@ -118,7 +118,7 @@ export function CinematicOverlay({ target, children }: CinematicOverlayProps) {
             transition={{
               duration: 0.45,
             }}
-            className="absolute rounded-xl border-2 border-[#5FA8FF] shadow-[0_0_0_4px_rgba(95,168,255,0.10),0_0_35px_rgba(95,168,255,0.35)]"
+            className="absolute rounded-xl border-2 border-[#5FA8FF]"
           />
         </>
       )}
@@ -143,7 +143,7 @@ function OverlayPanel({
         duration: 0.45,
         ease: "easeOut",
       }}
-      className="absolute"
+      className="pointer-events-auto absolute"
       style={{
         background: OVERLAY_COLOR,
       }}

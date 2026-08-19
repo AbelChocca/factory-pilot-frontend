@@ -41,6 +41,7 @@ export function CinematicContent() {
           targetSelector='[data-cinematic="production-readiness"]'
           eyebrow="Production readiness"
           placement="bottom"
+          preventScroll
           title="Can NorthWood fulfill its next production run?"
           description="FactoryPilot connects inventory, material availability and production requirements to assess whether the factory is ready to execute."
           actionLabel="Explore the production risk"
@@ -55,6 +56,7 @@ export function CinematicContent() {
           targetSelector='[data-cinematic="ask-copilot-production-readiness"]'
           eyebrow="AI Copilot"
           placement="left"
+          preventScroll
           title="Ask FactoryPilot why."
           description="FactoryPilot can analyze the production risk, identify the products at risk, explain their bottleneck materials, and recommend the most important actions."
           onTargetClick={next}

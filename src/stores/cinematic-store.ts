@@ -22,6 +22,7 @@ type CinematicState = {
   previous: () => void;
   complete: () => void;
   reset: () => void;
+  skip: () => void;
 
   setAnalysisStatus: (status: CinematicAnalysisStatus) => void;
 
@@ -52,6 +53,14 @@ export const useCinematicStore = create<CinematicState>()(
         set({
           cinematicInputValue: value,
         }),
+
+      skip: () => {
+        set({
+          status: "completed",
+          stepIndex: 0,
+          analysisStatus: "idle",
+        });
+      },
 
       next: () =>
         set((state) => ({

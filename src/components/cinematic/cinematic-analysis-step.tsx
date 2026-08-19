@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { BrainCircuit, Check, Loader2 } from "lucide-react";
 import { CinematicAnalysisStatus } from "@/src/lib/cinematic/cinematic-types";
 import { useEffect, useState } from "react";
+import { CinematicInteractionBlocker } from "./cinematic-interaction-blocker";
 
 interface CinematicAnalysisStepProps {
   status: CinematicAnalysisStatus;
@@ -44,7 +45,9 @@ export function CinematicAnalysisStep({ status }: CinematicAnalysisStepProps) {
   const [copilotRect, setCopilotRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
-    const element = document.querySelector('[data-cinematic="copilot-panel"]');
+    const element = document.querySelector(
+      '[data-cinematic="copilot-response"]',
+    );
 
     if (!element) {
       return;
@@ -73,6 +76,7 @@ export function CinematicAnalysisStep({ status }: CinematicAnalysisStepProps) {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[10000]">
+      <CinematicInteractionBlocker rect={copilotRect} />
       {/* Cinematic overlay */}
       <motion.div
         initial={{
